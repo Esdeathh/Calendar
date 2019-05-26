@@ -1,5 +1,3 @@
-import GUI.GUIForm;
-
 import javax.swing.*;
 
 public class Calendar {
@@ -7,22 +5,18 @@ public class Calendar {
 
         try {
             UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        } catch (InstantiationException e) {
-            e.printStackTrace();
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
-        } catch (UnsupportedLookAndFeelException e) {
+        } catch (ClassNotFoundException | UnsupportedLookAndFeelException | IllegalAccessException | InstantiationException e) {
             e.printStackTrace();
         }
 
         SwingUtilities.invokeLater(new Runnable() {
             @Override
             public void run() {
-                GUIForm guiForm = new GUIForm();
+                GUIForm guiForm = new GUIForm(new Logic(new DataBase()));
                 guiForm.setVisible(true);
             }
         });
+
+
     }
 }
