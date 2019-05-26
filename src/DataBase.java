@@ -24,19 +24,6 @@ public class DataBase {
 
     DataBase() {
         calendarEvents = new ArrayList<>();
-        //////////////////////////// stub
-        Calendar calendar = Calendar.getInstance();
-        calendar.set(2019, Calendar.MAY,25,14,30);
-        calendarEvents.add(new CalendarEvent(calendar, "dupa", "dasd"));
-        Calendar calendar2 = Calendar.getInstance();
-        calendar2.set(2019,Calendar.MAY,25,14,30);
-        calendarEvents.add(new CalendarEvent(calendar2, "dupa2", "dasd"));
-        Calendar calendar3 = Calendar.getInstance();
-        calendar3.set(2019,Calendar.MAY,26,14,30);
-        calendarEvents.add(new CalendarEvent(calendar3, "dupa3", "dasd"));
-        Calendar calendar4 = Calendar.getInstance();
-        calendar4.set(2019,4,25,19,5);
-        calendarEvents.add(new CalendarEvent(calendar4, "dupa4", "dasd"));
     }
 
     public final List<CalendarEvent> getEvents() {

@@ -116,7 +116,7 @@ public class GUIForm extends JFrame{
                 tmp2.add(s.toString());
         }
         JList list = new JList( tmp2.toArray(new String[tmp2.size()]));
-        ListDialogWithButtons dialog = new ListDialogWithButtons("Please select an item in the list: ", list);
+        ListDialogWithButtons dialog = new ListDialogWithButtons("List of events: ", list);
         dialog.setOnOk(e -> System.out.println("Chosen item: " + dialog.getSelectedItem()));
         dialog.show();
     }
@@ -168,14 +168,12 @@ public class GUIForm extends JFrame{
 
         menu = new JMenu("Menu");
         menu.setMnemonic(KeyEvent.VK_A);
-        menu.getAccessibleContext().setAccessibleDescription(
-                "The only menu in this program that has menu items");
         menuBar.add(menu);
         deleteUnder = new JMenuItem("DeleteUnder");
         deleteUnder.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                DatePicker datePicker = new DatePicker("List of incomming events: ");
+                DatePicker datePicker = new DatePicker("Choose delete time: ");
                 datePicker.setOnOk(x -> logic.deleteEventsUnderDate((Calendar)datePicker.getSelectedItem()));
                 datePicker.show();
             }
