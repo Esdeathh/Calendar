@@ -24,7 +24,7 @@ public class GUIForm extends JFrame{
     private Logic logic;
     private int minutesToCheck;
 
-    public GUIForm(Logic logic) {
+    public GUIForm(Logic logic ,int width,int height) {
     	panel1 = new JPanel();
         minutesToCheck = 15;
         this.logic = logic;
@@ -36,7 +36,7 @@ public class GUIForm extends JFrame{
         panel1.add(monthLabel);
         panel1.add(nextButton);
         setTitle("Calendar");
-        setBounds(300, 200, 700, 400);
+        setBounds(300, 200, width, height);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setResizable(false);
         localDate = LocalDate.now();
@@ -450,11 +450,11 @@ class DatePicker {
 }
 
 class EventCreator {
-    private JLabel label, d,m,y, place, description;
+    private JLabel label, d,m,y, place, description, h, mi;
     private JOptionPane optionPane;
     private JTextArea tPlace, tDescription;
     private JButton okButton, cancelButton;
-    private JComboBox<String> day, month, year;
+    private JComboBox<String> day, month, year, hour, mins;
     private ActionListener okEvent, cancelEvent;
     private JDialog dialog;
 
@@ -463,6 +463,8 @@ class EventCreator {
         d = new JLabel("Day:");
         m = new JLabel("Month:");
         y = new JLabel("Year:");
+        h = new JLabel("Hour:");
+        mi = new JLabel("Minute:");
         place = new JLabel("Place:");
         description = new JLabel("Description:");
         tPlace = new JTextArea();
@@ -470,6 +472,8 @@ class EventCreator {
         day = new JComboBox<>();
         month = new JComboBox<>();
         year = new JComboBox<>();
+        hour = new JComboBox<>();
+        mins = new JComboBox<>();
         for (int i = 1; i <= 31; i++) {
             day.addItem(String.valueOf(i));
         }
@@ -478,6 +482,12 @@ class EventCreator {
         }
         for (int i = 1990; i <= 2030; i++) {
             year.addItem(String.valueOf(i));
+        }
+        for (int i = 0; i <= 23; i++) {
+            hour.addItem(String.valueOf(i));
+        }
+        for (int i = 0; i <= 59; i++) {
+            mins.addItem(String.valueOf(i));
         }
         createAndDisplayOptionPane();
     }
@@ -520,6 +530,10 @@ class EventCreator {
         panel.add(month, right);
         panel.add(y, left);
         panel.add(year, right);
+        panel.add(h, left);
+        panel.add(hour, right);
+        panel.add(mi, left);
+        panel.add(mins, right);
         panel.add(place, left);
         panel.add(tPlace, right);
         panel.add(description, left);
@@ -534,6 +548,8 @@ class EventCreator {
     }
 
     private void handleOkButtonClick(ActionEvent e){
+        if (tDescription.getText().isEmpty()) throw new InvalidCalendarEventException();
+        if (tPlace.getText().isEmpty()) throw new InvalidCalendarEventException();
         if(okEvent != null){ okEvent.actionPerformed(e); }
         hide();
     }
@@ -549,7 +565,7 @@ class EventCreator {
 
     public Object getSelectedItem(){
         Calendar calendar = Calendar.getInstance();
-        calendar.set(Integer.valueOf((String)year.getSelectedItem()), Integer.valueOf((String)month.getSelectedItem())-1,Integer.valueOf((String)day.getSelectedItem()),0,0);
+        calendar.set(Integer.valueOf((String)year.getSelectedItem()), Integer.valueOf((String)month.getSelectedItem())-1,Integer.valueOf((String)day.getSelectedItem()),Integer.valueOf((String)hour.getSelectedItem()),Integer.valueOf((String)mins.getSelectedItem()));
         CalendarEvent calendarEvent = new CalendarEvent(calendar, tDescription.getText(), tPlace.getText());
         System.out.println(calendarEvent);
         return calendarEvent;

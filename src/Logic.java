@@ -53,7 +53,6 @@ public class Logic {
     }
 
     public void importDataFromXML(File file, boolean override){
-        System.out.println("dupa");
         try {
             dataBase.importDataFromXML(file, override);
         } catch (ParserConfigurationException e) {

@@ -39,7 +39,6 @@ public class DataBase {
     }
 
     public void exportDataToXML() throws ParserConfigurationException, TransformerException {
-        System.out.println("dupa");
         DocumentBuilderFactory documentFactory = DocumentBuilderFactory.newInstance();
 
         DocumentBuilder documentBuilder = documentFactory.newDocumentBuilder();
@@ -65,6 +64,12 @@ public class DataBase {
             Element day = document.createElement("day");
             calendar.appendChild(day);
             day.appendChild(document.createTextNode(String.valueOf(calendarEvent.getCalendar().get(Calendar.DAY_OF_MONTH))));
+            Element hour = document.createElement("hour");
+            calendar.appendChild(hour);
+            hour.appendChild(document.createTextNode(String.valueOf(calendarEvent.getCalendar().get(Calendar.HOUR_OF_DAY))));
+            Element minute = document.createElement("minute");
+            calendar.appendChild(minute);
+            minute.appendChild(document.createTextNode(String.valueOf(calendarEvent.getCalendar().get(Calendar.MINUTE))));
 
             Element description = document.createElement("description");
             event.appendChild(description);
@@ -94,7 +99,7 @@ public class DataBase {
         for (int i = 0; i < document.getElementsByTagName("event").getLength(); i++) {
             Element e = (Element) document.getElementsByTagName("event").item(i);
             Calendar calendar = Calendar.getInstance();
-            calendar.set(Integer.valueOf(e.getElementsByTagName("year").item(0).getTextContent()),Integer.valueOf(e.getElementsByTagName("month").item(0).getTextContent())-1,Integer.valueOf(e.getElementsByTagName("day").item(0).getTextContent()),0,0);
+            calendar.set(Integer.valueOf(e.getElementsByTagName("year").item(0).getTextContent()),Integer.valueOf(e.getElementsByTagName("month").item(0).getTextContent())-1,Integer.valueOf(e.getElementsByTagName("day").item(0).getTextContent()),Integer.valueOf(e.getElementsByTagName("hour").item(0).getTextContent()),Integer.valueOf(e.getElementsByTagName("minute").item(0).getTextContent()));
             CalendarEvent calendarEvent = new CalendarEvent(calendar, e.getElementsByTagName("description").item(0).getTextContent(),e.getElementsByTagName("place").item(0).getTextContent());
             System.out.println(calendarEvent);
             calendarEvents.add(calendarEvent);
