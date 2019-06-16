@@ -96,8 +96,10 @@ public class Logic {
     }
 
     public void createICSFile(CalendarEvent calendarEvent) {
-        ICalendar ical = new ICalendar();
+        ICalendar ics = new ICalendar();
         VEvent event = new VEvent();
+
+        System.out.println("File to write: " + calendarEvent);
 
         LocalDateTime localDateTime = LocalDateTime.of(
                 calendarEvent.getCalendar().get(Calendar.YEAR),
@@ -110,24 +112,15 @@ public class Logic {
         event.setLocation(calendarEvent.getPlace());
         event.setDescription(calendarEvent.getDescription());
 
-        ical.addEvent(event);
+        ics.addEvent(event);
 
-        File file = new File("iCal.ics");
+        try (FileWriter writer = new FileWriter("iCal.ics");
+             BufferedWriter bw = new BufferedWriter(writer)) {
 
-        FileWriter fileWriter = null;
-        BufferedWriter bufferedWriter = null;
+            bw.write(Biweekly.write(ics).go());
 
-        try {
-            fileWriter = new FileWriter(file);
         } catch (IOException e) {
-            e.printStackTrace();
-        }
-        bufferedWriter = new BufferedWriter(fileWriter);
-
-        try {
-            bufferedWriter.write(Biweekly.write(ical).go());
-        } catch (IOException e) {
-            e.printStackTrace();
+            System.err.format("IOException: %s%n", e);
         }
     }
 }
