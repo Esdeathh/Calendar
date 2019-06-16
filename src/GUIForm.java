@@ -18,8 +18,8 @@ public class GUIForm extends JFrame{
     private JTable table1;
     private JLabel monthLabel;
     private JMenuBar menuBar;
-    private JMenu menu, help, dataBase, xmlFile;
-    private JMenuItem aboutProgram, deleteUnder, createEvent, dataBaseImport, dataBaseExport, xmlFileImport, xmlFileExport;
+    private JMenu menu, help, dataBase, xmlFile, icsFile;
+    private JMenuItem aboutProgram, deleteUnder, createEvent, dataBaseImport, dataBaseExport, xmlFileImport, xmlFileExport, icsExport;
     private LocalDate localDate;
     private Logic logic;
     private int minutesToCheck;
@@ -117,7 +117,19 @@ public class GUIForm extends JFrame{
         }
         JList list = new JList( tmp2.toArray(new String[tmp2.size()]));
         ListDialogWithButtons dialog = new ListDialogWithButtons("List of events: ", list);
-        dialog.setOnOk(e -> System.out.println("Chosen item: " + dialog.getSelectedItem()));
+        dialog.setOnOk(e -> System.out.println("Chosen item: " + tmp.get((int)dialog.getSelectedItem())));
+        dialog.show();
+    }
+
+    private void showListToICal() {
+        List<CalendarEvent> tmp = logic.getAllEvents();
+        List<String> tmp2 = new ArrayList<>();
+        for (CalendarEvent s : tmp) {
+            tmp2.add(s.toString());
+        }
+        JList list = new JList( tmp2.toArray(new String[tmp2.size()]));
+        ListDialogWithButtons dialog = new ListDialogWithButtons("List of events: ", list);
+        dialog.setOnOk(e -> logic.createICSFile(tmp.get((int)dialog.getSelectedItem())));
         dialog.show();
     }
 
@@ -191,8 +203,18 @@ public class GUIForm extends JFrame{
         menu.add(createEvent);
         dataBase = new JMenu("Database");
         xmlFile = new JMenu("XML");
+        icsFile = new JMenu("ICS");
         menu.add(dataBase);
         menu.add(xmlFile);
+        menu.add(icsFile);
+        icsExport = new JMenuItem("export");
+        icsFile.add(icsExport);
+        icsExport.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                showListToICal();
+            }
+        });
         dataBaseExport = new JMenuItem("export");
         dataBaseImport = new JMenuItem("import");
         dataBase.add(dataBaseExport);
@@ -231,8 +253,8 @@ public class GUIForm extends JFrame{
                 JOptionPane.showConfirmDialog(panel1,
                         "Calendar\n" +
                                  "Authors: \n" +
-                                 "211835 Å�ukasz Radosz \n" +
-                                 "       Marcin RogaliÅ„ski", "About", JOptionPane.DEFAULT_OPTION);
+                                 "211835 Lukasz Radosz \n" +
+                                 "211975 Marcin Rogalinski", "About", JOptionPane.DEFAULT_OPTION);
             }
         });
         help.add(aboutProgram);
@@ -310,7 +332,7 @@ class ListDialogWithButtons {
 
     private void hide(){ dialog.setVisible(false); }
 
-    public Object getSelectedItem(){ return list.getSelectedValue(); }
+    public Object getSelectedItem(){ return list.getSelectedIndex(); }
 }
 
 class ListDialog {

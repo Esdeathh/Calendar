@@ -1,11 +1,20 @@
+import biweekly.Biweekly;
+import biweekly.ICalendar;
+import biweekly.component.VEvent;
+import biweekly.property.Summary;
 import org.xml.sax.SAXException;
 
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerException;
+import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -15,6 +24,10 @@ public class Logic {
 
     Logic(DataBase dataBase) {
         this.dataBase = dataBase;
+    }
+
+    public List<CalendarEvent> getAllEvents() {
+        return dataBase.getEvents();
     }
 
     public List<CalendarEvent> checkEventsIn(int minutes) {
@@ -80,5 +93,41 @@ public class Logic {
 
     public void exportDataToDataBase() {
 
+    }
+
+    public void createICSFile(CalendarEvent calendarEvent) {
+        ICalendar ical = new ICalendar();
+        VEvent event = new VEvent();
+
+        LocalDateTime localDateTime = LocalDateTime.of(
+                calendarEvent.getCalendar().get(Calendar.YEAR),
+                calendarEvent.getCalendar().get(Calendar.MONTH) + 1,
+                calendarEvent.getCalendar().get(Calendar.DAY_OF_MONTH),
+                calendarEvent.getCalendar().get(Calendar.HOUR_OF_DAY),
+                calendarEvent.getCalendar().get(Calendar.MINUTE));
+        Date eventTime = Date.from(localDateTime.atZone(ZoneId.systemDefault()).toInstant());
+        event.setDateStart(eventTime);
+        event.setLocation(calendarEvent.getPlace());
+        event.setDescription(calendarEvent.getDescription());
+
+        ical.addEvent(event);
+
+        File file = new File("iCal.ics");
+
+        FileWriter fileWriter = null;
+        BufferedWriter bufferedWriter = null;
+
+        try {
+            fileWriter = new FileWriter(file);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        bufferedWriter = new BufferedWriter(fileWriter);
+
+        try {
+            bufferedWriter.write(Biweekly.write(ical).go());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }
